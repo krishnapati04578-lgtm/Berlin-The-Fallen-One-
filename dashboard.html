@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Berlin: The Fallen One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08060f;
+      --accent: #c084b8;
+      --gold: #d4a843;
+      --text: #f0e8f5;
+      --muted: #b8a8c8;
+      --border: rgba(192,132,184,0.18);
+      --card-bg: rgba(20,14,36,0.7);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.1s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,6,15,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 60px;
+    }
+
+    .nav-brand {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 0.95rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+
+    .nav-avatar:hover { border-color: var(--accent); }
+
+    /* Main content */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* Hero section */
+    .hero {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .hero-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-style: italic;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Section headers */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section-head::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Novel cards */
+    .novel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 70px;
+    }
+
+    .novel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .novel-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(192,132,184,0.12);
+    }
+
+    .novel-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .novel-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.05rem;
+      line-height: 1.3;
+    }
+
+    .novel-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    .novel-meta {
+      display: flex;
+      gap: 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-top: auto;
+    }
+
+    /* Countdown */
+    .countdown-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 36px;
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .countdown-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .countdown-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .timer-grid {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .timer-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .timer-num {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 2.4rem;
+      color: var(--text);
+      min-width: 3ch;
+      text-align: center;
+    }
+
+    .timer-unit {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .timer-sep {
+      font-size: 2rem;
+      color: var(--border);
+      align-self: center;
+      padding-bottom: 16px;
+    }
+
+    /* About */
+    .about-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 70px;
+    }
+
+    @media (max-width: 700px) {
+      .about-section { grid-template-columns: 1fr; }
+    }
+
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 1rem;
+      margin-bottom: 14px;
+    }
+
+    .about-quote {
+      border-left: 2px solid var(--accent);
+      padding: 20px 24px;
+      font-style: italic;
+      color: var(--text);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      background: var(--card-bg);
+      border-radius: 0 6px 6px 0;
+      align-self: start;
+    }
+
+    /* Subscribe */
+    .subscribe-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .subscribe-section h3 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .subscribe-section p {
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+
+    .subscribe-form {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .subscribe-form input {
+      background: rgba(8,6,15,0.7);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 12px 18px;
+      color: var(--text);
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      outline: none;
+      min-width: 240px;
+      transition: border-color 0.2s;
+    }
+
+    .subscribe-form input:focus { border-color: var(--accent); }
+
+    .btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      padding: 12px 28px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      background: var(--accent);
+      color: #08060f;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+
+    .btn:hover { background: #d49acb; box-shadow: 0 0 18px rgba(192,132,184,0.3); }
+
+    /* Blog preview */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 70px;
+    }
+
+    .blog-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .blog-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .blog-date {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .blog-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .blog-excerpt {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .blog-read {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-top: auto;
+      text-transform: uppercase;
+    }
+
+    /* Support / Community */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .support-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .support-icon { font-size: 2rem; margin-bottom: 12px; }
+
+    .support-card h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .support-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* Mobile nav */
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .nav-links { gap: 14px; }
+      main { padding: 40px 16px 80px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/dashboard.html" class="nav-brand">Berlin</a>
+    <ul class="nav-links">
+      <li><a href="/novels/forgotten-knight/index.html">Novels</a></li>
+      <li><a href="/blog.html">Blog</a></li>
+      <li><a href="/profile.html">Profile</a></li>
+    </ul>
+    <a href="/profile.html" class="nav-avatar" id="navAvatar" title="Profile">👤</a>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <p class="hero-label">Welcome to the World</p>
+      <h1>Berlin — The Fallen One</h1>
+      <p>A dark fantasy saga of fallen gods, forgotten knights, and the price of remembering.</p>
+    </section>
+
+    <!-- Novels -->
+    <div class="section-head"><h2>Novels</h2></div>
+    <div class="novel-grid">
+      <a href="/novels/forgotten-knight/index.html" class="novel-card">
+        <span class="novel-badge">Ongoing · Arc 3</span>
+        <h3 class="novel-title">The Chronicles of the Forgotten Knight</h3>
+        <p class="novel-desc">A disgraced knight awakens with no memory of his past — only the echo of a name he was never meant to carry.</p>
+        <div class="novel-meta">
+          <span>22 Chapters</span>
+          <span>3 Arcs</span>
+        </div>
+      </a>
+      <div class="novel-card" style="opacity:0.45;pointer-events:none;">
+        <span class="novel-badge">Coming Soon</span>
+        <h3 class="novel-title">The Crimson Throne</h3>
+        <p class="novel-desc">A new tale from the same world — where blood decides everything.</p>
+        <div class="novel-meta"><span>Unannounced</span></div>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <section class="countdown-section">
+      <p class="countdown-label">Next Chapter Drops In</p>
+      <h3 class="countdown-title">Chapter 23 — The Siege of Ashenveil</h3>
+      <div class="timer-grid">
+        <div class="timer-cell"><div class="timer-num" id="cd-days">--</div><div class="timer-unit">Days</div></div>
+        <div class="timer-sep">:</div>
+        <div class="timer-cell"><div class="timer-num" id="cd-hours">--</div><div class="timer-unit">Hours</div></div>
+        <div class="timer-sep">:</div>
+        <div class="timer-cell"><div class="timer-num" id="cd-mins">--</div><div class="timer-unit">Minutes</div></div>
+        <div class="timer-sep">:</div>
+        <div class="timer-cell"><div class="timer-num" id="cd-secs">--</div><div class="timer-unit">Seconds</div></div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <div class="section-head"><h2>About the World</h2></div>
+    <div class="about-section">
+      <div class="about-text">
+        <p>
+          Berlin — The Fallen One is a dark fantasy web novel series set in the shattered realm of Varenhal, where the gods tore themselves apart and left their believers to survive in the silence.
+        </p>
+        <p>
+          The Chronicles of the Forgotten Knight follows a disgraced warrior who wakes in a mass grave with no memory and a sealed mark on his chest — the mark of something the gods wanted buried.
+        </p>
+      </div>
+      <blockquote class="about-quote">
+        "He did not seek redemption. He sought the truth — and the truth was worse than damnation."
+      </blockquote>
+    </div>
+
+    <!-- Subscribe -->
+    <section class="subscribe-section">
+      <h3>Join the Vigil</h3>
+      <p>Receive chapter alerts, lore drops, and author notes directly to your inbox.</p>
+      <div class="subscribe-form">
+        <input type="email" id="subEmail" placeholder="your@email.com" />
+        <button class="btn" onclick="handleSubscribe()">Subscribe</button>
+      </div>
+      <p id="subMsg" style="margin-top:14px;font-size:0.85rem;min-height:1.2rem;color:#86efac;"></p>
+    </section>
+
+    <!-- Blog preview -->
+    <div class="section-head"><h2>From the Author</h2></div>
+    <div class="blog-grid" id="blogGrid">
+      <!-- Loaded dynamically or fallback below -->
+      <a href="/blog.html" class="blog-card">
+        <span class="blog-date">Loading posts...</span>
+        <h4 class="blog-title">Visit the Blog</h4>
+        <p class="blog-excerpt">Read author notes, world lore, and chapter commentaries.</p>
+        <span class="blog-read">Read More →</span>
+      </a>
+    </div>
+
+    <!-- Support / Community -->
+    <div class="section-head"><h2>Support &amp; Community</h2></div>
+    <div class="support-grid">
+      <div class="support-card">
+        <div class="support-icon">📖</div>
+        <h4>Read Freely</h4>
+        <p>All chapters are free to read. No paywalls, no barriers.</p>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">🕯</div>
+        <h4>Ko-fi Support</h4>
+        <p>If this story moves you, a small offering keeps the author writing.</p>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">💬</div>
+        <h4>Community</h4>
+        <p>Discuss lore, theories, and fan works with fellow readers.</p>
+      </div>
+      <div class="support-card">
+        <div class="support-icon">✉</div>
+        <h4>Newsletter</h4>
+        <p>Subscribe above to get notified when new chapters arrive.</p>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { auth, db } from '/js/firebase.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js';
+    import { doc, getDoc, collection, query, orderBy, limit, getDocs }
+      from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+
+    // Auth state — update nav avatar
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          if (snap.exists()) {
+            const AVATAR_EMOJI = ['🗡','🛡','🐉','🌑','⚗','🕯','🌿','💀','🌙','🔮','🦅','⚔'];
+            const idx = parseInt((snap.data().avatar || 'avatar1').replace('avatar', '')) - 1;
+            document.getElementById('navAvatar').textContent = AVATAR_EMOJI[idx] || '👤';
+          }
+        } catch {}
+      }
+    });
+
+    // Countdown to next Saturday midnight UTC
+    function getNextTarget() {
+      const now = new Date();
+      const target = new Date(now);
+      target.setUTCHours(0, 0, 0, 0);
+      const day = target.getUTCDay();
+      const daysUntilSat = (6 - day + 7) % 7 || 7;
+      target.setUTCDate(target.getUTCDate() + daysUntilSat);
+      return target;
+    }
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tickCountdown() {
+      const diff = getNextTarget() - Date.now();
+      if (diff <= 0) { tickCountdown(); return; }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000)  / 60000);
+      const s = Math.floor((diff % 60000)    / 1000);
+      document.getElementById('cd-days').textContent  = pad(d);
+      document.getElementById('cd-hours').textContent = pad(h);
+      document.getElementById('cd-mins').textContent  = pad(m);
+      document.getElementById('cd-secs').textContent  = pad(s);
+    }
+
+    setInterval(tickCountdown, 1000);
+    tickCountdown();
+
+    // Blog preview
+    async function loadBlogPreview() {
+      try {
+        const q = query(collection(db, 'blog'), orderBy('publishedAt', 'desc'), limit(3));
+        const snap = await getDocs(q);
+        if (snap.empty) return;
+        const grid = document.getElementById('blogGrid');
+        grid.innerHTML = '';
+        snap.forEach(d => {
+          const post = d.data();
+          const date = post.publishedAt?.toDate?.()?.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) || '';
+          grid.innerHTML += `
+            <a href="/blog-post.html?id=${d.id}" class="blog-card">
+              <span class="blog-date">${date}</span>
+              <h4 class="blog-title">${post.title || ''}</h4>
+              <p class="blog-excerpt">${post.excerpt || ''}</p>
+              <span class="blog-read">Read More →</span>
+            </a>`;
+        });
+      } catch {}
+    }
+
+    loadBlogPreview();
+
+    // Subscribe
+    window.handleSubscribe = async function () {
+      const email = document.getElementById('subEmail').value.trim();
+      const msg   = document.getElementById('subMsg');
+      if (!email) { msg.style.color = '#f87171'; msg.textContent = 'Please enter your email.'; return; }
+      msg.style.color = '#b8a8c8';
+      msg.textContent = 'Subscribing...';
+      try {
+        const res = await fetch('/.netlify/functions/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: email,
+            subject: 'Welcome to the Vigil — Berlin: The Fallen One',
+            htmlContent: '<p>You have joined the vigil. New chapters will find you.</p>'
+          })
+        });
+        if (res.ok) {
+          msg.style.color = '#86efac';
+          msg.textContent = '✓ You are now part of the vigil.';
+          document.getElementById('subEmail').value = '';
+        } else {
+          throw new Error('Server error');
+        }
+      } catch {
+        msg.style.color = '#f87171';
+        msg.textContent = 'Something went wrong. Please try again.';
+      }
+    };
+  </script>
+</body>
+</html>

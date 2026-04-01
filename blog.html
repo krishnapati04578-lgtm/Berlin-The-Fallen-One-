@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Berlin: The Fallen One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08060f;
+      --accent: #c084b8;
+      --text: #f0e8f5;
+      --muted: #b8a8c8;
+      --border: rgba(192,132,184,0.18);
+      --card-bg: rgba(20,14,36,0.75);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.1s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,6,15,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 58px;
+    }
+
+    .nav-brand {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 0.9rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .page-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.26em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      line-height: 1.2;
+    }
+
+    /* Blog cards */
+    .blog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .blog-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px 32px;
+      text-decoration: none;
+      color: inherit;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 28px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .blog-card:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .blog-date-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding-top: 4px;
+    }
+
+    .blog-day {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.6rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .blog-mon {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .blog-yr {
+      font-family: 'Cinzel', serif;
+      font-size: 0.5rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .blog-content {}
+
+    .blog-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .blog-excerpt {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.75;
+      font-style: italic;
+      margin-bottom: 14px;
+    }
+
+    .blog-read {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    /* Empty / loading states */
+    .state-msg {
+      text-align: center;
+      color: var(--muted);
+      font-style: italic;
+      padding: 60px 0;
+    }
+
+    @media (max-width: 500px) {
+      .blog-card { grid-template-columns: 1fr; }
+      .blog-date-col { flex-direction: row; gap: 8px; align-items: baseline; margin-bottom: 12px; }
+      nav { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/dashboard.html" class="nav-brand">Berlin</a>
+    <ul class="nav-links">
+      <li><a href="/dashboard.html">Dashboard</a></li>
+      <li><a href="/novels/forgotten-knight/index.html">Novel</a></li>
+      <li><a href="/blog.html" class="active">Blog</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <header class="page-header">
+      <p class="page-label">From the Author</p>
+      <h1>The Author's Vigil</h1>
+    </header>
+
+    <div class="blog-list" id="blogList">
+      <p class="state-msg">Loading posts...</p>
+    </div>
+  </main>
+
+  <script type="module">
+    import { db } from '/js/firebase.js';
+    import { collection, query, where, orderBy, getDocs }
+      from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+
+    async function loadPosts() {
+      const list = document.getElementById('blogList');
+      try {
+        const q = query(
+          collection(db, 'blog'),
+          where('published', '==', true),
+          orderBy('publishedAt', 'desc')
+        );
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          list.innerHTML = '<p class="state-msg">No posts yet. The author is writing in silence.</p>';
+          return;
+        }
+
+        list.innerHTML = '';
+        snap.forEach(d => {
+          const post = d.data();
+          const date = post.publishedAt?.toDate?.() || new Date();
+          const day = date.getDate();
+          const mon = date.toLocaleDateString('en-GB', { month: 'short' }).toUpperCase();
+          const yr  = date.getFullYear();
+
+          const a = document.createElement('a');
+          a.className = 'blog-card';
+          a.href = `/blog-post.html?id=${d.id}`;
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.body.style.transition = 'opacity 0.35s ease';
+            document.body.style.opacity = '0';
+            setTimeout(() => { window.location.href = a.href; }, 350);
+          });
+
+          a.innerHTML = `
+            <div class="blog-date-col">
+              <div class="blog-day">${day}</div>
+              <div class="blog-mon">${mon}</div>
+              <div class="blog-yr">${yr}</div>
+            </div>
+            <div class="blog-content">
+              <h2 class="blog-title">${post.title || 'Untitled'}</h2>
+              <p class="blog-excerpt">${post.excerpt || ''}</p>
+              <span class="blog-read">Read More →</span>
+            </div>`;
+
+          list.appendChild(a);
+        });
+      } catch (err) {
+        console.error(err);
+        list.innerHTML = `<p class="state-msg">Could not load posts. Please try again later.</p>`;
+      }
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>

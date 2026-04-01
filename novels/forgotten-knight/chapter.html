@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapter — The Chronicles of the Forgotten Knight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08060f;
+      --accent: #c084b8;
+      --text: #f0e8f5;
+      --muted: #b8a8c8;
+      --border: rgba(192,132,184,0.18);
+      --bar-bg: rgba(8,6,15,0.95);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      opacity: 0;
+      animation: fadeIn 0.5s ease 0.05s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    /* Fixed top bar */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 54px;
+      background: var(--bar-bg);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+    }
+
+    .topbar-back {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+
+    .topbar-back:hover { color: var(--accent); }
+
+    .topbar-sep { color: var(--border); flex-shrink: 0; }
+
+    .topbar-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar-novel {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-chapter {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Version toggle */
+    .version-toggle {
+      display: flex;
+      align-items: center;
+      background: rgba(8,6,15,0.6);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      flex-shrink: 0;
+    }
+
+    .ver-btn {
+      padding: 5px 12px;
+      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      text-transform: uppercase;
+      font-family: inherit;
+      font-size: inherit;
+      letter-spacing: inherit;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .ver-btn.active {
+      background: var(--accent);
+      color: #08060f;
+      font-weight: 700;
+    }
+
+    /* Reading area */
+    .reading-area {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+    }
+
+    /* Chapter heading */
+    .ch-meta {
+      text-align: center;
+      margin-bottom: 52px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 36px;
+    }
+
+    .ch-arc-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .ch-num-display {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .ch-title-display {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    /* Chapter body */
+    .chapter-body {
+      font-size: 1.15rem;
+      line-height: 1.95;
+      color: var(--text);
+    }
+
+    .chapter-body p {
+      margin-bottom: 1.4em;
+      text-indent: 1.8em;
+    }
+
+    .chapter-body p:first-child { text-indent: 0; }
+
+    .chapter-body .scene-break {
+      text-align: center;
+      margin: 2.5em 0;
+      color: var(--accent);
+      letter-spacing: 0.5em;
+      font-size: 0.9rem;
+    }
+
+    /* Loading / error */
+    .loading {
+      text-align: center;
+      color: var(--muted);
+      font-style: italic;
+      padding: 60px 0;
+      font-size: 1rem;
+    }
+
+    .error-msg {
+      text-align: center;
+      color: #f87171;
+      padding: 60px 0;
+      font-size: 1rem;
+    }
+
+    /* Chapter nav */
+    .chapter-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-ch-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      padding: 12px 22px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      display: inline-block;
+    }
+
+    .nav-ch-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .nav-ch-btn:disabled, .nav-ch-btn.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .nav-ch-center {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav-ch-center:hover { color: var(--accent); }
+
+    /* Guest notice */
+    .guest-notice {
+      background: rgba(192,132,184,0.06);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .guest-notice a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .guest-notice a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <!-- Fixed top bar -->
+  <div class="topbar">
+    <a href="/novels/forgotten-knight/index.html" class="topbar-back" id="topbarBack">← Novel</a>
+    <span class="topbar-sep">|</span>
+    <div class="topbar-info">
+      <div class="topbar-novel">The Chronicles of the Forgotten Knight</div>
+      <div class="topbar-chapter" id="topbarChapter">Loading...</div>
+    </div>
+    <div class="version-toggle">
+      <button class="ver-btn active" id="btnOriginal" onclick="setVersion('original')">Original</button>
+      <button class="ver-btn" id="btnLight" onclick="setVersion('light')">Light</button>
+    </div>
+  </div>
+
+  <div class="reading-area">
+    <!-- Guest notice injected if not logged in -->
+    <div id="guestNotice" style="display:none;" class="guest-notice">
+      You are reading as a guest. <a href="/login.html">Sign in</a> to save your progress.
+    </div>
+
+    <!-- Chapter heading -->
+    <div class="ch-meta" id="chMeta" style="display:none;">
+      <p class="ch-arc-label" id="chArcLabel"></p>
+      <p class="ch-num-display" id="chNumDisplay"></p>
+      <h1 class="ch-title-display" id="chTitleDisplay"></h1>
+    </div>
+
+    <!-- Chapter content -->
+    <div id="chapterContent">
+      <p class="loading">Opening the tome...</p>
+    </div>
+
+    <!-- Chapter navigation -->
+    <nav class="chapter-nav" id="chapterNav" style="display:none;">
+      <a class="nav-ch-btn" id="prevBtn" href="#">← Previous</a>
+      <a class="nav-ch-center" href="/novels/forgotten-knight/index.html">Chapter List</a>
+      <a class="nav-ch-btn" id="nextBtn" href="#">Next →</a>
+    </nav>
+  </div>
+
+  <script type="module">
+    import { auth, db } from '/js/firebase.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js';
+    import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp }
+      from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+
+    // Chapter metadata (mirrors the novel index)
+    const CHAPTERS = [
+      { num: 1,  title: 'The Grave That Breathed',    arc: 'I',   arcName: 'The Grave That Breathed' },
+      { num: 2,  title: 'Blood in the Mud',           arc: 'I',   arcName: 'The Grave That Breathed' },
+      { num: 3,  title: 'The Crow Knows His Name',    arc: 'I',   arcName: 'The Grave That Breathed' },
+      { num: 4,  title: 'What the Seal Remembers',    arc: 'I',   arcName: 'The Grave That Breathed' },
+      { num: 5,  title: 'The Last Road to Vethkar',   arc: 'I',   arcName: 'The Grave That Breathed' },
+      { num: 6,  title: 'The City of Amber and Ash',  arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 7,  title: 'A Name Worth Killing For',   arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 8,  title: "The Inquisitor's Garden",    arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 9,  title: 'Bread and Broken Glass',     arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 10, title: 'The Godless Quarter',        arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 11, title: 'What the Archives Burned',   arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 12, title: 'The Woman in the Tower',     arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 13, title: 'Iron Promise',               arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 14, title: 'The Night the City Wept',    arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 15, title: 'Ash and Departure',          arc: 'II',  arcName: 'Vethkar Burns' },
+      { num: 16, title: 'Beyond the Pale Wall',       arc: 'III', arcName: 'The Fallen Keep' },
+      { num: 17, title: 'Soldiers of a Dead God',     arc: 'III', arcName: 'The Fallen Keep' },
+      { num: 18, title: 'The Siege That Never Ended', arc: 'III', arcName: 'The Fallen Keep' },
+      { num: 19, title: 'What Gods Fear',             arc: 'III', arcName: 'The Fallen Keep' },
+      { num: 20, title: 'The Seal Breaks Open',       arc: 'III', arcName: 'The Fallen Keep' },
+      { num: 21, title: 'Berlin',                     arc: 'III', arcName: 'The Fallen Keep' },
+      { num: 22, title: 'The Fallen One',             arc: 'III', arcName: 'The Fallen Keep' },
+    ];
+
+    const TOTAL = CHAPTERS.length;
+
+    // Parse chapter number from URL
+    const params  = new URLSearchParams(window.location.search);
+    let chNum     = parseInt(params.get('ch')) || 1;
+    if (chNum < 1) chNum = 1;
+    if (chNum > TOTAL) chNum = TOTAL;
+
+    const chMeta = CHAPTERS[chNum - 1];
+
+    // Version
+    let currentVersion = localStorage.getItem('tcofk-version') || 'original';
+
+    window.setVersion = function (v) {
+      currentVersion = v;
+      localStorage.setItem('tcofk-version', v);
+      document.getElementById('btnOriginal').classList.toggle('active', v === 'original');
+      document.getElementById('btnLight').classList.toggle('active', v === 'light');
+      loadContent();
+    };
+
+    function applyVersion() {
+      document.getElementById('btnOriginal').classList.toggle('active', currentVersion === 'original');
+      document.getElementById('btnLight').classList.toggle('active', currentVersion === 'light');
+    }
+
+    applyVersion();
+
+    // Navigation links
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function buildNavHref(num) {
+      return `/novels/forgotten-knight/chapter.html?ch=${num}`;
+    }
+
+    function navigate(e, url) {
+      e.preventDefault();
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+
+    if (chNum <= 1) {
+      prevBtn.classList.add('disabled');
+      prevBtn.removeAttribute('href');
+    } else {
+      prevBtn.href = buildNavHref(chNum - 1);
+      prevBtn.addEventListener('click', (e) => navigate(e, prevBtn.href));
+    }
+
+    if (chNum >= TOTAL) {
+      nextBtn.classList.add('disabled');
+      nextBtn.removeAttribute('href');
+    } else {
+      nextBtn.href = buildNavHref(chNum + 1);
+      nextBtn.addEventListener('click', (e) => navigate(e, nextBtn.href));
+    }
+
+    // Set top bar
+    document.getElementById('topbarChapter').textContent =
+      `Chapter ${chNum} — ${chMeta.title}`;
+    document.title = `Ch${chNum}: ${chMeta.title} — TCOFK`;
+
+    // Chapter meta block
+    document.getElementById('chArcLabel').textContent  = `Arc ${chMeta.arc} · ${chMeta.arcName}`;
+    document.getElementById('chNumDisplay').textContent = `Chapter ${chNum}`;
+    document.getElementById('chTitleDisplay').textContent = chMeta.title;
+    document.getElementById('chMeta').style.display = 'block';
+    document.getElementById('chapterNav').style.display = 'flex';
+
+    // Load chapter content from Firestore
+    async function loadContent() {
+      const contentEl = document.getElementById('chapterContent');
+      contentEl.innerHTML = '<p class="loading">Opening the tome...</p>';
+
+      try {
+        const chapterId = `ch${String(chNum).padStart(3, '0')}`;
+        const field = currentVersion === 'light' ? 'contentLight' : 'contentOriginal';
+        const snap = await getDoc(doc(db, 'novels', 'forgotten-knight', 'chapters', chapterId));
+
+        if (!snap.exists()) {
+          // Fallback placeholder content
+          renderFallback(contentEl);
+          return;
+        }
+
+        const data = snap.data();
+        const text = data[field] || data['contentOriginal'] || '';
+        renderContent(contentEl, text);
+      } catch (err) {
+        console.error(err);
+        renderFallback(contentEl);
+      }
+    }
+
+    function renderContent(el, text) {
+      // text is stored as plain paragraphs separated by \n\n
+      // or HTML — detect and render accordingly
+      if (text.trim().startsWith('<')) {
+        el.innerHTML = `<div class="chapter-body">${text}</div>`;
+      } else {
+        const html = text.split(/\n\n+/)
+          .map(p => p.trim())
+          .filter(Boolean)
+          .map(p => p === '* * *' || p === '---'
+            ? `<div class="scene-break">✦ ✦ ✦</div>`
+            : `<p>${escapeHtml(p).replace(/\n/g, '<br/>')}</p>`)
+          .join('');
+        el.innerHTML = `<div class="chapter-body">${html}</div>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderFallback(el) {
+      el.innerHTML = `
+        <div class="chapter-body">
+          <p>
+            The page is blank. Not empty — blank, in the way that means something was here
+            and chose to leave. The words of this chapter have not yet been committed to this
+            medium. Check back soon.
+          </p>
+          <div class="scene-break">✦ ✦ ✦</div>
+          <p>
+            <em>(Chapter content will be loaded from Firestore once published. Add the document
+            <code style="font-size:0.85em;color:var(--accent)">novels/forgotten-knight/chapters/ch${String(chNum).padStart(3,'0')}</code>
+            with fields <code style="font-size:0.85em;color:var(--accent)">contentOriginal</code> and optionally
+            <code style="font-size:0.85em;color:var(--accent)">contentLight</code>.)</em>
+          </p>
+        </div>`;
+    }
+
+    // Auth + progress saving
+    let readingStartTime = Date.now();
+    let currentUser = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (!user) {
+        document.getElementById('guestNotice').style.display = 'block';
+      } else {
+        document.getElementById('guestNotice').style.display = 'none';
+        // Save progress
+        await saveProgress(user.uid);
+      }
+    });
+
+    async function saveProgress(uid) {
+      try {
+        const userRef = doc(db, 'users', uid);
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) return;
+        const prev = snap.data()['progress_forgotten-knight'] || 0;
+        const updates = {};
+        if (chNum > prev) {
+          updates['progress_forgotten-knight'] = chNum;
+          updates['chaptersRead'] = increment(1);
+        }
+        if (Object.keys(updates).length > 0) {
+          await updateDoc(userRef, updates);
+        }
+      } catch (err) {
+        console.error('Progress save error:', err);
+      }
+    }
+
+    // Track reading time — save on page leave
+    window.addEventListener('beforeunload', async () => {
+      if (!currentUser) return;
+      const mins = Math.round((Date.now() - readingStartTime) / 60000);
+      if (mins < 1) return;
+      try {
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+          timeSpentReading: increment(mins)
+        });
+      } catch {}
+    });
+
+    // Initial load
+    loadContent();
+  </script>
+</body>
+</html>

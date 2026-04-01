@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enter the World — Berlin: The Fallen One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08060f;
+      --accent: #d4a843;
+      --text: #f0e8f5;
+      --muted: #b8a8c8;
+      --border: rgba(212,168,67,0.18);
+      --panel: rgba(20,14,36,0.92);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.1s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    .layout {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left — form panel */
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 48px;
+      background: var(--panel);
+    }
+
+    .back-link {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover { opacity: 1; }
+
+    .form-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.6rem;
+      color: var(--text);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .form-subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 36px;
+      text-align: center;
+    }
+
+    .form-group {
+      width: 100%;
+      max-width: 340px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: rgba(8,6,15,0.7);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus { border-color: var(--accent); }
+
+    .btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      padding: 13px 28px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #08060f;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .btn-primary:hover {
+      background: #e8bd5c;
+      box-shadow: 0 0 22px rgba(212,168,67,0.3);
+    }
+
+    .btn-google {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      max-width: 340px;
+      padding: 12px 28px;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+    }
+
+    .btn-google:hover {
+      border-color: var(--accent);
+      background: rgba(212,168,67,0.05);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+      margin: 18px 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .switch-mode {
+      margin-top: 20px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .switch-mode a, .switch-mode button {
+      color: var(--accent);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .switch-mode a:hover, .switch-mode button:hover { text-decoration: underline; }
+
+    #authError {
+      display: none;
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+
+    /* Right — dark knight figure */
+    .art-panel {
+      position: relative;
+      background: linear-gradient(135deg, #0d0820 0%, #08060f 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 60px 40px;
+      overflow: hidden;
+    }
+
+    .art-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(212,168,67,0.07) 0%, transparent 65%);
+    }
+
+    .knight-silhouette {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -52%);
+      font-size: 220px;
+      opacity: 0.08;
+      user-select: none;
+      filter: blur(1px);
+    }
+
+    .art-quote {
+      position: relative;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--muted);
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.8;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .art-title {
+      position: relative;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+    }
+
+    /* Overlay */
+    #worldOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(8,6,15,0.92);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    #worldOverlay.active { display: flex; }
+
+    .world-icon {
+      font-size: 58px;
+      color: var(--accent);
+      font-family: 'Cinzel Decorative', cursive;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: scale(0.97); }
+      50%       { opacity: 1;   transform: scale(1.03); }
+    }
+
+    .world-message {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; }
+      .art-panel { display: none; }
+      .form-panel { padding: 60px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="/index.html" class="back-link">← Back</a>
+
+  <div id="worldOverlay">
+    <div class="world-icon">✦</div>
+    <div class="world-message">Crossing the threshold...</div>
+  </div>
+
+  <div class="layout">
+    <!-- Form panel -->
+    <div class="form-panel">
+      <h1 class="form-title" id="formTitle">Enter the World</h1>
+      <p class="form-subtitle" id="formSubtitle">Sign in to continue your journey</p>
+
+      <div id="authError"></div>
+
+      <div class="form-group">
+        <label for="emailInput">Email</label>
+        <input type="email" id="emailInput" autocomplete="email" placeholder="your@email.com" />
+      </div>
+
+      <div class="form-group">
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput" autocomplete="current-password" placeholder="••••••••" />
+      </div>
+
+      <button class="btn btn-primary" id="mainAuthBtn" onclick="handleMainAuth()">Sign In</button>
+
+      <div class="divider">or</div>
+
+      <button class="btn btn-google" onclick="signInWithGoogle()">
+        <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
+          <path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.7 20-21 0-1.4-.1-2.7-.5-4z" fill="#FFC107"/>
+          <path d="M6.3 14.7l7 5.1C15.1 16.1 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.6 0-14.2 4.2-17.7 11.7z" fill="#FF3D00"/>
+          <path d="M24 45c5.5 0 10.5-1.9 14.4-5.1l-6.7-5.5C29.6 36 27 37 24 37c-6 0-10.7-3.9-11.7-9.2l-7 5.4C8.9 41.2 15.9 45 24 45z" fill="#4CAF50"/>
+          <path d="M44.5 20H24v8.5h11.8c-.6 2.3-1.9 4.2-3.7 5.5l6.7 5.5C42.5 36.2 45 30.6 45 24c0-1.4-.1-2.7-.5-4z" fill="#1976D2"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <p class="switch-mode" id="switchMode">
+        Don't have an account? <button onclick="toggleMode()">Register</button>
+      </p>
+    </div>
+
+    <!-- Art panel -->
+    <div class="art-panel">
+      <div class="knight-silhouette">⚔</div>
+      <p class="art-title">Berlin — The Fallen One</p>
+      <blockquote class="art-quote">
+        "He stood at the edge of oblivion, not as a conqueror, but as a ghost who refused to forget."
+      </blockquote>
+    </div>
+  </div>
+
+  <script type="module">
+    import '/js/auth.js';
+
+    let isRegisterMode = false;
+
+    window.toggleMode = function () {
+      isRegisterMode = !isRegisterMode;
+      document.getElementById('formTitle').textContent    = isRegisterMode ? 'Forge Your Seal' : 'Enter the World';
+      document.getElementById('formSubtitle').textContent = isRegisterMode ? 'Create your account' : 'Sign in to continue your journey';
+      document.getElementById('mainAuthBtn').textContent  = isRegisterMode ? 'Register' : 'Sign In';
+      document.getElementById('switchMode').innerHTML     = isRegisterMode
+        ? 'Already have an account? <button onclick="toggleMode()">Sign In</button>'
+        : "Don't have an account? <button onclick=\"toggleMode()\">Register</button>";
+      const pwInput = document.getElementById('passwordInput');
+      if (pwInput) pwInput.autocomplete = isRegisterMode ? 'new-password' : 'current-password';
+      document.getElementById('authError').style.display = 'none';
+    };
+
+    window.handleMainAuth = function () {
+      if (isRegisterMode) {
+        window.registerWithEmail();
+      } else {
+        window.signInWithEmail();
+      }
+    };
+
+    // Show world overlay
+    const overlay = document.getElementById('worldOverlay');
+    const origShow = window.signInWithGoogle;
+
+    // Fade in on load
+    document.body.style.opacity = '1';
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users collection — owner can read/write their own document
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update: if request.auth != null && request.auth.uid == uid;
+      allow delete: if false;
+    }
+
+    // Username index — readable by authenticated users (for availability check)
+    match /usernames/{username} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.resource.data.uid == request.auth.uid;
+    }
+
+    // Novels collection — publicly readable
+    match /novels/{novelId} {
+      allow read: if true;
+      allow write: if false;
+
+      // Chapters — publicly readable
+      match /chapters/{chapterId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+
+    // Blog posts — publicly readable
+    match /blog/{postId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Subscriptions — owner only
+    match /subscriptions/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
