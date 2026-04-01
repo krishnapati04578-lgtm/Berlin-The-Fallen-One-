@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — Berlin: The Fallen One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08060f;
+      --accent: #c084b8;
+      --text: #f0e8f5;
+      --muted: #b8a8c8;
+      --border: rgba(192,132,184,0.18);
+      --card-bg: rgba(20,14,36,0.75);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.1s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,6,15,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 58px;
+    }
+
+    .nav-brand {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 0.9rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-back {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--accent); }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* Avatar + name */
+    .profile-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+
+    .avatar-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      box-shadow: 0 0 28px rgba(192,132,184,0.2);
+      cursor: pointer;
+      transition: box-shadow 0.25s;
+    }
+
+    .avatar-circle:hover { box-shadow: 0 0 40px rgba(192,132,184,0.35); }
+
+    .avatar-hint {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .profile-username {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.6rem;
+      color: var(--text);
+    }
+
+    .profile-email {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 500px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* Settings sections */
+    .settings-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .settings-row:last-child { border-bottom: none; }
+
+    .settings-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .settings-value {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Toggle switch */
+    .toggle-switch {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: rgba(192,132,184,0.15);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      transition: background 0.25s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 3px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      background: var(--muted);
+      transition: left 0.25s, background 0.25s;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: rgba(192,132,184,0.3);
+      border-color: var(--accent);
+    }
+
+    .toggle-switch input:checked + .toggle-slider::before {
+      left: calc(100% - 19px);
+      background: var(--accent);
+    }
+
+    /* Inline edit */
+    .inline-edit {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .inline-edit input {
+      background: rgba(8,6,15,0.7);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-family: 'EB Garamond', serif;
+      font-size: 0.95rem;
+      outline: none;
+      width: 160px;
+      transition: border-color 0.2s;
+    }
+
+    .inline-edit input:focus { border-color: var(--accent); }
+
+    .btn-sm {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      padding: 8px 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      text-transform: uppercase;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+
+    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-sm.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #08060f;
+      font-weight: 700;
+    }
+
+    .btn-sm.primary:hover { background: #d49acb; }
+
+    .btn-sm.danger {
+      border-color: rgba(248,113,113,0.3);
+      color: #f87171;
+    }
+
+    .btn-sm.danger:hover {
+      border-color: #f87171;
+      background: rgba(248,113,113,0.08);
+    }
+
+    /* Avatar picker modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(8,6,15,0.88);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: #0e0b1a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 420px;
+      width: 90%;
+    }
+
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .avatar-opt {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(192,132,184,0.08);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .avatar-opt:hover { transform: scale(1.1); border-color: rgba(192,132,184,0.4); }
+    .avatar-opt.selected { border-color: var(--accent); }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    /* Feedback */
+    .feedback {
+      font-size: 0.82rem;
+      font-style: italic;
+      min-height: 1.2rem;
+      margin-top: 6px;
+    }
+
+    .feedback.ok  { color: #86efac; }
+    .feedback.err { color: #f87171; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/dashboard.html" class="nav-back">← Dashboard</a>
+    <a href="/dashboard.html" class="nav-brand">Berlin</a>
+    <div></div>
+  </nav>
+
+  <main>
+    <!-- Profile header -->
+    <div class="profile-head" id="profileHead">
+      <div class="avatar-circle" id="avatarCircle" onclick="openAvatarModal()" title="Change avatar">👤</div>
+      <p class="avatar-hint">Click to change avatar</p>
+      <h1 class="profile-username" id="profileUsername">Loading...</h1>
+      <p class="profile-email" id="profileEmail"></p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-num" id="statChapters">—</div>
+        <div class="stat-label">Chapters Read</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statTime">—</div>
+        <div class="stat-label">Minutes Reading</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statMember">—</div>
+        <div class="stat-label">Member Since</div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-section">
+      <!-- Subscription -->
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Newsletter Subscription</div>
+          <div class="settings-value" id="subStatus">—</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="subToggle" onchange="toggleSubscription()" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Username change -->
+      <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+        <div class="settings-label">Change Username</div>
+        <div class="inline-edit">
+          <input type="text" id="newUsername" placeholder="New username" maxlength="24" oninput="onUsernameInput()" />
+          <button class="btn-sm primary" onclick="saveUsername()">Save</button>
+        </div>
+        <div class="feedback" id="usernameFeedback"></div>
+      </div>
+    </div>
+
+    <!-- Sign out -->
+    <div style="text-align:center;margin-top:32px;">
+      <button class="btn-sm danger" onclick="doSignOut()">Sign Out</button>
+    </div>
+  </main>
+
+  <!-- Avatar picker modal -->
+  <div class="modal-backdrop" id="avatarModal">
+    <div class="modal">
+      <p class="modal-title">Choose Your Avatar</p>
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <div class="modal-actions">
+        <button class="btn-sm" onclick="closeAvatarModal()">Cancel</button>
+        <button class="btn-sm primary" onclick="saveAvatar()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from '/js/firebase.js';
+    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js';
+    import { doc, getDoc, updateDoc, collection, query, where, getDocs }
+      from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+
+    const AVATARS = ['🗡','🛡','🐉','🌑','⚗','🕯','🌿','💀','🌙','🔮','🦅','⚔'];
+
+    let currentUser = null;
+    let userData    = {};
+    let selectedAvatar = null;
+    let usernameAvailableCache = false;
+
+    // Build avatar grid in modal
+    const grid = document.getElementById('avatarGrid');
+    AVATARS.forEach((em, i) => {
+      const el = document.createElement('div');
+      el.className = 'avatar-opt';
+      el.textContent = em;
+      el.dataset.value = `avatar${i + 1}`;
+      el.onclick = () => {
+        document.querySelectorAll('.avatar-opt').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedAvatar = el.dataset.value;
+      };
+      grid.appendChild(el);
+    });
+
+    window.openAvatarModal = function () {
+      // Pre-select current avatar
+      document.querySelectorAll('.avatar-opt').forEach(o => {
+        o.classList.toggle('selected', o.dataset.value === userData.avatar);
+      });
+      selectedAvatar = userData.avatar || null;
+      document.getElementById('avatarModal').classList.add('open');
+    };
+
+    window.closeAvatarModal = function () {
+      document.getElementById('avatarModal').classList.remove('open');
+    };
+
+    window.saveAvatar = async function () {
+      if (!selectedAvatar || !currentUser) return;
+      try {
+        await updateDoc(doc(db, 'users', currentUser.uid), { avatar: selectedAvatar });
+        userData.avatar = selectedAvatar;
+        renderAvatar();
+        closeAvatarModal();
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+
+    function renderAvatar() {
+      const idx = parseInt((userData.avatar || 'avatar1').replace('avatar', '')) - 1;
+      document.getElementById('avatarCircle').textContent = AVATARS[idx] || '👤';
+    }
+
+    // Auth
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = '/login.html';
+        return;
+      }
+      currentUser = user;
+      document.getElementById('profileEmail').textContent = user.email || '';
+
+      try {
+        const snap = await getDoc(doc(db, 'users', user.uid));
+        if (snap.exists()) {
+          userData = snap.data();
+          renderProfile();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    function renderProfile() {
+      renderAvatar();
+      document.getElementById('profileUsername').textContent = userData.username || 'Unknown';
+      document.getElementById('statChapters').textContent   = userData.chaptersRead || 0;
+      document.getElementById('statTime').textContent       = userData.timeSpentReading || 0;
+
+      const ms = userData.memberSince;
+      if (ms) {
+        const d = ms.toDate ? ms.toDate() : new Date(ms);
+        document.getElementById('statMember').textContent = d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+      }
+
+      const subscribed = !!userData.subscribed;
+      document.getElementById('subToggle').checked = subscribed;
+      document.getElementById('subStatus').textContent = subscribed ? 'Subscribed' : 'Not subscribed';
+    }
+
+    window.toggleSubscription = async function () {
+      if (!currentUser) return;
+      const checked = document.getElementById('subToggle').checked;
+      try {
+        await updateDoc(doc(db, 'users', currentUser.uid), { subscribed: checked });
+        userData.subscribed = checked;
+        document.getElementById('subStatus').textContent = checked ? 'Subscribed' : 'Not subscribed';
+      } catch (err) {
+        alert(err.message);
+        document.getElementById('subToggle').checked = !checked;
+      }
+    };
+
+    window.onUsernameInput = function () {
+      usernameAvailableCache = false;
+      document.getElementById('usernameFeedback').textContent = '';
+      document.getElementById('usernameFeedback').className = 'feedback';
+    };
+
+    window.saveUsername = async function () {
+      const val = document.getElementById('newUsername').value.trim();
+      const fb  = document.getElementById('usernameFeedback');
+      fb.className = 'feedback';
+
+      if (!val || val.length < 3) {
+        fb.className = 'feedback err';
+        fb.textContent = 'At least 3 characters required.';
+        return;
+      }
+
+      if (val === userData.username) {
+        fb.className = 'feedback err';
+        fb.textContent = 'That is already your username.';
+        return;
+      }
+
+      fb.textContent = 'Checking...';
+
+      try {
+        const q = query(collection(db, 'users'), where('username', '==', val));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          fb.className = 'feedback err';
+          fb.textContent = 'Username already taken.';
+          return;
+        }
+
+        await updateDoc(doc(db, 'users', currentUser.uid), { username: val });
+        userData.username = val;
+        document.getElementById('profileUsername').textContent = val;
+        document.getElementById('newUsername').value = '';
+        fb.className = 'feedback ok';
+        fb.textContent = '✓ Username updated.';
+      } catch (err) {
+        fb.className = 'feedback err';
+        fb.textContent = err.message;
+      }
+    };
+
+    window.doSignOut = async function () {
+      await signOut(auth);
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = '/index.html'; }, 350);
+    };
+  </script>
+</body>
+</html>

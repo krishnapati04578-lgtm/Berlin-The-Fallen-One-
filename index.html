@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Berlin — The Fallen One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08060f;
+      --accent: #d4a843;
+      --text: #f0e8f5;
+      --muted: #b8a8c8;
+      --border: rgba(212,168,67,0.18);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    /* Background — day / night */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      transition: opacity 1.2s ease;
+    }
+
+    .bg-night {
+      background: radial-gradient(ellipse at 30% 20%, #1a0d2e 0%, #08060f 60%);
+      opacity: 1;
+    }
+
+    .bg-day {
+      background: radial-gradient(ellipse at 60% 30%, #2a1a00 0%, #0f0800 40%, #08060f 80%);
+      opacity: 0;
+    }
+
+    body.day .bg-night { opacity: 0; }
+    body.day .bg-day   { opacity: 1; }
+
+    /* Stars */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      transition: opacity 1.2s ease;
+    }
+
+    body.day .stars { opacity: 0; }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--min, 0.2); }
+      50%       { opacity: var(--max, 0.8); }
+    }
+
+    /* Layout */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    /* Toggle */
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 10;
+      background: rgba(212,168,67,0.08);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: background 0.3s;
+      color: var(--accent);
+    }
+
+    .toggle-btn:hover { background: rgba(212,168,67,0.15); }
+
+    /* Hero text */
+    .subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.28em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text);
+      text-shadow: 0 2px 40px rgba(212,168,67,0.18);
+      margin-bottom: 24px;
+    }
+
+    h1 span {
+      color: var(--accent);
+      display: block;
+      font-size: 0.55em;
+      letter-spacing: 0.12em;
+    }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 52px;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      padding: 14px 32px;
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #08060f;
+      border: 1px solid var(--accent);
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: #e8bd5c;
+      box-shadow: 0 0 24px rgba(212,168,67,0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      background: rgba(212,168,67,0.06);
+    }
+
+    /* Separator */
+    .ornament {
+      color: var(--accent);
+      font-size: 1.1rem;
+      letter-spacing: 0.4em;
+      margin: 48px 0 32px;
+      opacity: 0.6;
+    }
+
+    /* Tagline quote */
+    .quote {
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 400px;
+      line-height: 1.8;
+      border-left: 2px solid var(--border);
+      padding-left: 18px;
+    }
+
+    /* Fade-in on arrive */
+    body {
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.1s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body id="mainBody">
+  <!-- Background layers -->
+  <div class="bg-layer bg-night"></div>
+  <div class="bg-layer bg-day"></div>
+  <div class="stars" id="stars"></div>
+
+  <!-- Day/night toggle -->
+  <button class="toggle-btn" onclick="toggleDayNight()" id="toggleBtn" title="Toggle day/night">🌙</button>
+
+  <!-- Main content -->
+  <main class="page">
+    <p class="subtitle">A dark fantasy saga</p>
+    <h1>
+      Berlin
+      <span>— The Fallen One —</span>
+    </h1>
+    <p class="tagline">
+      In a world where gods bleed and heroes kneel, one fallen soul dares to remember who he was.
+    </p>
+    <div class="btn-group">
+      <a href="/login.html" class="btn btn-primary" onclick="navigate(event, '/login.html')">Enter the World</a>
+      <a href="/dashboard.html" class="btn btn-outline" onclick="navigate(event, '/dashboard.html')">Read as Guest</a>
+    </div>
+
+    <div class="ornament">✦ ✦ ✦</div>
+
+    <blockquote class="quote">
+      "The gods did not fall from grace — they were pushed. And Berlin remembers every hand that shoved."
+    </blockquote>
+  </main>
+
+  <script>
+    // Stars
+    (function () {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < 140; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const size = Math.random() * 2.2 + 0.5;
+        s.style.cssText = [
+          `width:${size}px`, `height:${size}px`,
+          `top:${Math.random() * 100}%`, `left:${Math.random() * 100}%`,
+          `--dur:${(Math.random() * 4 + 2).toFixed(1)}s`,
+          `--min:${(Math.random() * 0.3).toFixed(2)}`,
+          `--max:${(Math.random() * 0.5 + 0.4).toFixed(2)}`,
+          `animation-delay:${(Math.random() * 5).toFixed(1)}s`
+        ].join(';');
+        container.appendChild(s);
+      }
+    })();
+
+    // Day/night toggle
+    const body = document.getElementById('mainBody');
+    const btn  = document.getElementById('toggleBtn');
+    let isDay  = localStorage.getItem('btfo-theme') === 'day';
+
+    function applyTheme() {
+      if (isDay) {
+        body.classList.add('day');
+        btn.textContent = '☀';
+      } else {
+        body.classList.remove('day');
+        btn.textContent = '🌙';
+      }
+    }
+
+    window.toggleDayNight = function () {
+      isDay = !isDay;
+      localStorage.setItem('btfo-theme', isDay ? 'day' : 'night');
+      applyTheme();
+    };
+
+    applyTheme();
+
+    // Page navigation with fade-out
+    window.navigate = function (e, url) {
+      e.preventDefault();
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity   = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    };
+  </script>
+</body>
+</html>

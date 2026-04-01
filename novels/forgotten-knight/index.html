@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Chronicles of the Forgotten Knight — Berlin: The Fallen One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08060f;
+      --accent: #c084b8;
+      --text: #f0e8f5;
+      --muted: #b8a8c8;
+      --border: rgba(192,132,184,0.18);
+      --card-bg: rgba(20,14,36,0.75);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.1s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    /* Atmospheric background */
+    .bg-atmosphere {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(192,132,184,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(80,40,100,0.08) 0%, transparent 50%),
+        #08060f;
+    }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,6,15,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 58px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .back-link {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--accent); }
+
+    .nav-sep { color: var(--border); }
+
+    .nav-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .nav-right a {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-right a:hover { color: var(--accent); }
+
+    /* Version toggle */
+    .version-toggle {
+      display: flex;
+      align-items: center;
+      background: rgba(8,6,15,0.6);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+    }
+
+    .ver-btn {
+      padding: 6px 14px;
+      cursor: pointer;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      text-transform: uppercase;
+      font-family: inherit;
+      font-size: inherit;
+      letter-spacing: inherit;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .ver-btn.active {
+      background: var(--accent);
+      color: #08060f;
+      font-weight: 700;
+    }
+
+    /* Main */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* Header */
+    .novel-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .novel-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.26em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .novel-header h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .novel-header .byline {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* Synopsis */
+    .synopsis {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px 32px;
+      margin-bottom: 56px;
+    }
+
+    .synopsis-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .synopsis p {
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    .synopsis p:last-child { margin-bottom: 0; }
+
+    /* Arc header */
+    .arc-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 16px;
+      margin-top: 40px;
+    }
+
+    .arc-header:first-child { margin-top: 0; }
+
+    .arc-header h2 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .arc-header .arc-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .arc-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Chapter list */
+    .chapter-list {
+      list-style: none;
+      margin-bottom: 0;
+    }
+
+    .chapter-row {
+      display: grid;
+      grid-template-columns: 3ch 1fr auto auto;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s;
+      border-radius: 4px;
+    }
+
+    .chapter-row:last-child { border-bottom: none; }
+    .chapter-row:hover { background: rgba(192,132,184,0.05); }
+
+    .ch-num {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-align: right;
+    }
+
+    .ch-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .ch-arc {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .ch-date {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    @media (max-width: 600px) {
+      .chapter-row {
+        grid-template-columns: 3ch 1fr;
+        grid-template-rows: auto auto;
+      }
+      .ch-arc, .ch-date { display: none; }
+      nav { padding: 0 16px; }
+      .nav-title { display: none; }
+    }
+
+    /* Version note */
+    .version-note {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    /* Progress indicator */
+    .progress-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-align: right;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-atmosphere"></div>
+
+  <nav>
+    <div class="nav-left">
+      <a href="/dashboard.html" class="back-link">← Dashboard</a>
+      <span class="nav-sep">|</span>
+      <span class="nav-title">The Chronicles of the Forgotten Knight</span>
+    </div>
+    <div class="nav-right">
+      <a href="world-notes.html">World Notes</a>
+      <div class="version-toggle" id="versionToggle">
+        <button class="ver-btn active" id="btnOriginal" onclick="setVersion('original')">Original</button>
+        <button class="ver-btn" id="btnLight" onclick="setVersion('light')">Light</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Novel header -->
+    <header class="novel-header">
+      <p class="novel-label">Novel · Dark Fantasy</p>
+      <h1>The Chronicles of the<br/>Forgotten Knight</h1>
+      <p class="byline">By Berlin</p>
+    </header>
+
+    <!-- Synopsis -->
+    <section class="synopsis">
+      <p class="synopsis-label">Synopsis</p>
+      <p>
+        In the shattered realm of Varenhal, gods once walked among men — until the Fracture tore heaven apart and left their servants to fend for themselves in a world gone cold.
+      </p>
+      <p>
+        A knight wakes in a mass grave. He has no name. No memory. Only a sealed mark on his chest that pulses like a second heartbeat — and a nagging feeling that he has died before.
+      </p>
+      <p>
+        As he scrapes together the pieces of who he was, he discovers that someone very powerful wanted him forgotten. And they are not done with him yet.
+      </p>
+    </section>
+
+    <!-- Version note -->
+    <div class="version-note" id="versionNote">
+      Currently reading: <strong>Original version</strong> — unedited prose, as first written.
+    </div>
+
+    <!-- Progress (for logged-in readers) -->
+    <p class="progress-label" id="progressLabel"></p>
+
+    <!-- Chapter list built by JS -->
+    <div id="chaptersContainer"></div>
+  </main>
+
+  <script type="module">
+    import { auth, db } from '/js/firebase.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+
+    // Chapter data
+    const CHAPTERS = [
+      // Arc 1
+      { num: 1,  title: 'The Grave That Breathed',      arc: 1, arcLabel: 'I',   date: '2024-01-06' },
+      { num: 2,  title: 'Blood in the Mud',             arc: 1, arcLabel: 'I',   date: '2024-01-13' },
+      { num: 3,  title: 'The Crow Knows His Name',      arc: 1, arcLabel: 'I',   date: '2024-01-20' },
+      { num: 4,  title: 'What the Seal Remembers',      arc: 1, arcLabel: 'I',   date: '2024-01-27' },
+      { num: 5,  title: 'The Last Road to Vethkar',     arc: 1, arcLabel: 'I',   date: '2024-02-03' },
+      // Arc 2
+      { num: 6,  title: 'The City of Amber and Ash',    arc: 2, arcLabel: 'II',  date: '2024-02-10' },
+      { num: 7,  title: 'A Name Worth Killing For',     arc: 2, arcLabel: 'II',  date: '2024-02-17' },
+      { num: 8,  title: "The Inquisitor's Garden",      arc: 2, arcLabel: 'II',  date: '2024-02-24' },
+      { num: 9,  title: 'Bread and Broken Glass',       arc: 2, arcLabel: 'II',  date: '2024-03-02' },
+      { num: 10, title: 'The Godless Quarter',          arc: 2, arcLabel: 'II',  date: '2024-03-09' },
+      { num: 11, title: 'What the Archives Burned',     arc: 2, arcLabel: 'II',  date: '2024-03-16' },
+      { num: 12, title: 'The Woman in the Tower',       arc: 2, arcLabel: 'II',  date: '2024-03-23' },
+      { num: 13, title: 'Iron Promise',                 arc: 2, arcLabel: 'II',  date: '2024-03-30' },
+      { num: 14, title: 'The Night the City Wept',      arc: 2, arcLabel: 'II',  date: '2024-04-06' },
+      { num: 15, title: 'Ash and Departure',            arc: 2, arcLabel: 'II',  date: '2024-04-13' },
+      // Arc 3
+      { num: 16, title: 'Beyond the Pale Wall',         arc: 3, arcLabel: 'III', date: '2024-04-20' },
+      { num: 17, title: 'Soldiers of a Dead God',       arc: 3, arcLabel: 'III', date: '2024-04-27' },
+      { num: 18, title: 'The Siege That Never Ended',   arc: 3, arcLabel: 'III', date: '2024-05-04' },
+      { num: 19, title: 'What Gods Fear',               arc: 3, arcLabel: 'III', date: '2024-05-11' },
+      { num: 20, title: 'The Seal Breaks Open',         arc: 3, arcLabel: 'III', date: '2024-05-18' },
+      { num: 21, title: 'Berlin',                       arc: 3, arcLabel: 'III', date: '2024-05-25' },
+      { num: 22, title: 'The Fallen One',               arc: 3, arcLabel: 'III', date: '2024-06-01' },
+    ];
+
+    const ARC_NAMES = {
+      1: { label: 'Arc I',   sub: 'The Grave That Breathed' },
+      2: { label: 'Arc II',  sub: 'Vethkar Burns' },
+      3: { label: 'Arc III', sub: 'The Fallen Keep' },
+    };
+
+    // Version preference
+    let currentVersion = localStorage.getItem('tcofk-version') || 'original';
+
+    window.setVersion = function (v) {
+      currentVersion = v;
+      localStorage.setItem('tcofk-version', v);
+      document.getElementById('btnOriginal').classList.toggle('active', v === 'original');
+      document.getElementById('btnLight').classList.toggle('active', v === 'light');
+      document.getElementById('versionNote').innerHTML =
+        v === 'original'
+          ? 'Currently reading: <strong>Original version</strong> — unedited prose, as first written.'
+          : 'Currently reading: <strong>Light version</strong> — revised for smoother reading.';
+    };
+
+    setVersion(currentVersion);
+
+    // Build chapter list into container
+    function buildChapterList(readerProgress) {
+      const container = document.getElementById('chaptersContainer');
+      container.innerHTML = '';
+
+      let lastArc = 0;
+      let ul = null;
+
+      CHAPTERS.forEach(ch => {
+        if (ch.arc !== lastArc) {
+          lastArc = ch.arc;
+          const info = ARC_NAMES[ch.arc];
+
+          const arcDiv = document.createElement('div');
+          arcDiv.className = 'arc-header';
+          arcDiv.innerHTML = `<h2>${info.label}</h2><span class="arc-sub">${info.sub}</span>`;
+          container.appendChild(arcDiv);
+
+          ul = document.createElement('ul');
+          ul.className = 'chapter-list';
+          container.appendChild(ul);
+        }
+
+        const isRead = readerProgress && ch.num <= readerProgress;
+        const li = document.createElement('li');
+        const a  = document.createElement('a');
+        a.className = 'chapter-row';
+        a.href = `/novels/forgotten-knight/chapter.html?ch=${ch.num}`;
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.body.style.transition = 'opacity 0.35s ease';
+          document.body.style.opacity = '0';
+          setTimeout(() => { window.location.href = a.href; }, 350);
+        });
+
+        const dateObj = new Date(ch.date);
+        const dateStr = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        a.innerHTML = `
+          <span class="ch-num">${ch.num}</span>
+          <span class="ch-title">${ch.title}${isRead ? ' <span style="color:var(--accent);font-size:0.7em">✓</span>' : ''}</span>
+          <span class="ch-arc">Arc ${ch.arcLabel}</span>
+          <span class="ch-date">${dateStr}</span>
+        `;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+    }
+
+    // Auth + progress
+    onAuthStateChanged(auth, async (user) => {
+      let progress = null;
+      if (user) {
+        try {
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          if (snap.exists()) {
+            progress = snap.data()['progress_forgotten-knight'] || null;
+            if (progress) {
+              document.getElementById('progressLabel').textContent = `Your progress: Chapter ${progress}`;
+            }
+          }
+        } catch {}
+      }
+      buildChapterList(progress);
+    });
+  </script>
+</body>
+</html>
